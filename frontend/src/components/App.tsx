@@ -8,14 +8,18 @@ import Celsius from 'assets/icons/weather-icons/celsius.svg?react';
 import Thermometer from 'assets/icons/weather-icons/thermometer.svg?react';
 import ThermometerColder from 'assets/icons/weather-icons/thermometer-colder.svg?react';
 import axios from 'axios';
+import { IForecast } from 'interface';
+import Forecast from './forecast';
+import { get } from 'http';
+import { getWeatherIcon } from 'utils/getIcon';
 
 const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
-const randoms = [
-  [1, 2],
-  [3, 4, 5],
-  [6, 7]
-]
+// const randoms = [
+//   [1, 2],
+//   [3, 4, 5],
+//   [6, 7]
+// ]
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -23,7 +27,21 @@ function App() {
     return localStorage.getItem('theme') === 'dark' || false;
   });
 
-  const [backgroundImageUrl, setBackgroundImageUrl] = useState('public/sunny.jpg');
+  //Insert script tag for Google Maps API
+  // useEffect(() => {
+  //   const apiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
+  //   const script = document.createElement('script');
+  //   script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&loading=async&libraries=places&callback=initMap`;
+  //   script.async = true;
+  //   document.head.appendChild(script);
+
+  //   // Cleanup the script when the component is unmounted
+  //   return () => {
+  //     document.head.removeChild(script);
+  //   };
+  // }, []);
+
+  const [backgroundImageUrl, setBackgroundImageUrl] = useState('/sunny.jpg');
   const [weather, setWeather] = useState({
     "coord": {
       "lon": -74.006,
@@ -69,7 +87,7 @@ function App() {
     "name": "New York",
     "cod": 200
   });
-  const [forecast, setForecast] = useState({
+  const [forecast, setForecast] = useState<IForecast>({
     "cod": "200",
     "message": 0,
     "cnt": 40,
@@ -1531,10 +1549,8 @@ function App() {
   });
   const [city, setCity] = useState('New York');
 
-
   useEffect(() => {
     const root = document.documentElement;
-
     if (darkMode) {
       root.classList.add('dark');
       localStorage.setItem('theme', 'dark');
@@ -1564,8 +1580,6 @@ function App() {
 
   }, [city]);
 
-  console.log(forecast.list.length)
-
   const options = {
     timeZone: 'America/New_York',
     year: 'numeric',
@@ -1576,47 +1590,72 @@ function App() {
     second: '2-digit',
   };
 
-  const formatter = new Intl.DateTimeFormat('en-US', options);
-  forecast.list.map((item) => {
-    console.log(item.dt, formatter.format(new Date(item.dt * 1000)))
-  })
+  // const formatter = new Intl.DateTimeFormat('en-US', options);
+  // forecast.list.map((item) => {
+  //   console.log(item.dt, formatter.format(new Date(item.dt * 1000)))
+  // })
 
   return (
-    <div className={`relative overflow-hidden `} >
-
+    <div className={`relative overflow-hidden text-white `} >
+      {/* Background image */}
       <div
-        className={`absolute inset-0 blur-sm
- bg-[url(${backgroundImageUrl})] bg-cover opacity-50 bg-center h-screen filter blur-sm -z-10`}
-      ></div>
+        className={`absolute inset-0 blur-sm bg-cover opacity-50 bg-center h-screen filter -z-10`}
+        style={{
+          backgroundImage: `url(${backgroundImageUrl})`,
+        }}
+      />
 
       <div className={`h-screen filter-none sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40 `}>
         <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
           <div className='w-1/3'>
             <SearchBar />
           </div>
-          <div className="sm:max-w-lg bg-white">
+          <div className="sm:max-w-lg ">
 
             {
               weather &&
-              <div className='flex flex-col items-center justify-center text-center bg-gray-200 '>
-                <div className='flex capitalize text-lg'>{weather.name}</div>
-                <div className='flex text-6xl'>
-                  <div>{weather.main.temp.toString().split('.')[0]}</div>
-                  <Celsius className='w-10 h-10' />
-                </div>
-                <div className='capitalize'>{weather.weather[0].description}</div>
-                <div className=' flex items-center justify-center'>
-                  <div className='flex items-center justify-center'>
-                    <>H </>
-                    <>{weather.main.temp_max.toString().split('.')[0]}</>
-                    <Thermometer className='w-10 h-10' />
+              <div className='flex'>
+                <div className='flex flex-col items-center justify-center text-center bg-gray-200 '>
+
+                  <div className='flex capitalize text-lg'>{weather.name}</div>
+                  <div className='flex text-6xl'>
+                    {getWeatherIcon(weather.weather[0].icon, 'w-16 h-16')}
+                    <div>{weather.main.temp.toString().split('.')[0]}</div>
+                    <Celsius className='w-10 h-10' />
+                  </div>
+                  <div className='flex'>
+                    Feels like {weather.main.feels_like.toString().split('.')[0]}
+                  </div>
+                  <div className='capitalize'>{weather.weather[0].description}</div>
+                  <div className=' flex items-center justify-center'>
+                    <div className='flex items-center justify-center'>
+                      <>H </>
+                      <>{weather.main.temp_max.toString().split('.')[0]}</>
+                      <Thermometer className='w-10 h-10' />
+                    </div>
+
+                    <div className='flex items-center justify-center'>
+                      <>L </>
+                      <>{weather.main.temp_min.toString().split('.')[0]}</>
+                      <ThermometerColder className='w-10 h-10' />
+                    </div>
                   </div>
 
-                  <div className='flex items-center justify-center'>
-                    <>L </>
-                    <>{weather.main.temp_min.toString().split('.')[0]}</>
-                    <ThermometerColder className='w-10 h-10' />
+                </div>
+
+                <div className='flex flex-col'>
+                  <div className='flex justify-center items-center gap-1'>
+                    <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/humidity.svg" alt="Humidity" className="w-10 h-19" />
+                    <a>Humidity</a>
+                    <a>{weather.main.humidity}%</a>
                   </div>
+
+                  <div className='flex justify-center items-center gap-1'>
+                    <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" alt="wind" className="w-10 h-19" />
+                    <a>Wind</a>
+                    <a>{weather.wind.speed}km/h</a>
+                  </div>
+
                 </div>
               </div>
             }
@@ -1625,13 +1664,7 @@ function App() {
             {
               weather &&
               <div className='mt-10 flex flex-col  bg-gray-200'>
-
-                <div className='capitalize'>
-                  Rain Forecast
-                </div>
-
-
-
+                <Forecast forecast={forecast} />
               </div>
             }
 

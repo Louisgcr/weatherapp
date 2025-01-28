@@ -1,8 +1,28 @@
 import React, { useEffect, useState } from 'react';
+import usePlacesAutocomplete, {
+  getGeocode,
+  getLatLng,
+} from "use-places-autocomplete";
+
 import useKeyPress from 'hooks/useKeyPress';
 import { CloseIcon, SearchIcon } from 'assets/icons/icons';
 
 const SearchBar = () => {
+
+  const {
+    ready,
+    value,
+    suggestions: { status, data },
+    setValue,
+    clearSuggestions,
+  } = usePlacesAutocomplete({
+    callbackName: "initMap",
+    requestOptions: {
+      /* Define search scope here */
+    },
+    debounce: 1000,
+  });
+
   const [search, setSearch] = useState('');
 
   const arrowUpPressed = useKeyPress('ArrowUp');
@@ -14,12 +34,14 @@ const SearchBar = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
+    setValue(e.target.value);
   };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setSearch('');
+        clearSuggestions();
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
@@ -27,6 +49,20 @@ const SearchBar = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     }
   }, []);
+
+  const handleSelect = async (description) => {
+    try {
+      const results = await getGeocode({ address: description });
+      const { lat, lng } = await getLatLng(results[0]);
+      // onSelect({ lat, lng }); // Pass lat/lon to the parent component
+      clearSuggestions();
+      setValue(description, false);
+    } catch (error) {
+      console.error("Error getting geolocation:", error);
+    }
+  };
+
+  console.log("suggestions", data);
 
   return (
     <div ref={menuRef} className="flex relative w-full my-3">
