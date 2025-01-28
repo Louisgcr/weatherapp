@@ -54,6 +54,6 @@ export interface IWeather {
 
 export interface IWind {
   deg: number;
-  gust: number;
+  gust?: number;
   speed: number;
 }

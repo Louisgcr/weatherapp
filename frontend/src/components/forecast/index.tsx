@@ -1,21 +1,43 @@
 import { IForecast } from "interface";
 
 import { getWeatherIcon } from 'utils/getIcon';
-import Celsius from 'assets/icons/weather-icons/celsius.svg?react';
+import { useEffect, useRef } from "react";
+
+
 interface IForecastProps {
   forecast: IForecast;
 }
 
+export function useHorizontalScroll<T extends HTMLElement>() {
+  const elRef = useRef<T>(null);
+  useEffect(() => {
+    const el = elRef.current;
+    if (el) {
+      const onWheel = (e: WheelEvent) => {
+        if (e.deltaY == 0) return;
+        e.preventDefault();
+        el.scrollTo({
+          left: el.scrollLeft + e.deltaY,
+          behavior: 'smooth',
+        });
+      };
+      el.addEventListener('wheel', onWheel);
+      return () => el.removeEventListener('wheel', onWheel);
+    }
+  }, []);
+  return elRef;
+}
+
 const Forecast = ({ forecast }: IForecastProps) => {
+  const elRef = useHorizontalScroll<HTMLDivElement>();
 
   return (
     <div>
-      <div className="grid grid-cols-8">
-        {forecast.list?.slice(0, 8).map(forecast => {
-          // console.log(forecast);
+      <div ref={elRef} className="flex scrollbar-hidden overflow-x-auto">
+        {forecast.list?.map(forecast => {
           return (
-            <div className="flex flex-col" key={forecast.dt}>
-              <div className="flex">
+            <div className="flex flex-col px-2" key={forecast.dt}>
+              <div className=" flex">
                 {
                   new Date(forecast.dt_txt).toLocaleTimeString([], { hour: 'numeric', hour12: true })
                 }

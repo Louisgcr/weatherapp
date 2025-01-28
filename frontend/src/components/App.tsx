@@ -10,8 +10,12 @@ import ThermometerColder from 'assets/icons/weather-icons/thermometer-colder.svg
 import axios from 'axios';
 import { IForecast } from 'interface';
 import Forecast from './forecast';
-import { get } from 'http';
 import { getWeatherIcon } from 'utils/getIcon';
+import WindSpeedWidget from './widgets/windSpeedWidget';
+import React from 'react';
+import MapWidget from './widgets/mapWidget';
+import VisibilityWidget from './widgets/visibilityWidget';
+
 
 const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
@@ -41,7 +45,7 @@ function App() {
   //   };
   // }, []);
 
-  const [backgroundImageUrl, setBackgroundImageUrl] = useState('/sunny.jpg');
+  const [backgroundImageUrl, setBackgroundImageUrl] = useState('/sunny.webp');
   const [weather, setWeather] = useState({
     "coord": {
       "lon": -74.006,
@@ -1605,18 +1609,14 @@ function App() {
         }}
       />
 
-      <div className={`h-screen filter-none sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40 `}>
-        <div className="relative mx-auto max-w-7xl px-4 sm:static sm:px-6 lg:px-8">
-          <div className='w-1/3'>
-            <SearchBar />
-          </div>
+      <div className={`h-screen flex filter-none sm:pb-40 sm:pt-24 lg:pb-48 lg:pt-40 `}>
+        <div className="relative max-w-7xl pl-4 sm:static sm:pl-6 lg:pl-8">
           <div className="sm:max-w-lg ">
-
+            <SearchBar />
             {
               weather &&
-              <div className='flex'>
-                <div className='flex flex-col items-center justify-center text-center bg-gray-200 '>
-
+              <div className='flex bg-blue-600 bg-opacity-30 rounded-lg p-4'>
+                <div className='flex flex-col items-center justify-center text-center'>
                   <div className='flex capitalize text-lg'>{weather.name}</div>
                   <div className='flex text-6xl'>
                     {getWeatherIcon(weather.weather[0].icon, 'w-16 h-16')}
@@ -1660,13 +1660,24 @@ function App() {
               </div>
             }
 
-
             {
               weather &&
-              <div className='mt-10 flex flex-col  bg-gray-200'>
+              <div className='mt-4 flex flex-col bg-blue-600 bg-opacity-30 rounded-lg p-4'>
                 <Forecast forecast={forecast} />
               </div>
             }
+
+            {
+              weather &&
+              <WindSpeedWidget data={weather.wind} />
+            }
+
+            {
+              weather &&
+              <VisibilityWidget data={weather.visibility} description={weather.weather[0].description} />
+            }
+
+
 
 
           </div>
@@ -1701,6 +1712,10 @@ function App() {
             </div>
           </div> */}
         </div>
+        {/* 
+        <div className="w-full h-full px-4 rounded-lg">
+          <MapWidget />
+        </div> */}
       </div>
     </div>
   )
