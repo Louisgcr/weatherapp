@@ -1,11 +1,11 @@
-import { IForecast } from "interface";
+import { IWeatherAPI3Response } from "interface";
 
 import { getWeatherIcon } from 'utils/getIcon';
 import { useEffect, useRef } from "react";
 
 
 interface IForecastProps {
-  forecast: IForecast;
+  hourlyforecast: IWeatherAPI3Response;
 }
 
 export function useHorizontalScroll<T extends HTMLElement>() {
@@ -28,37 +28,41 @@ export function useHorizontalScroll<T extends HTMLElement>() {
   return elRef;
 }
 
-const Forecast = ({ forecast }: IForecastProps) => {
+const Forecast = ({ hourlyforecast }: IForecastProps) => {
   const elRef = useHorizontalScroll<HTMLDivElement>();
 
   return (
-    <div>
-      <div ref={elRef} className="flex scrollbar-hidden overflow-x-auto">
-        {forecast.list?.map(forecast => {
+    <div className="flex flex-col">
+      <div className="text-base pb-2">
+        {hourlyforecast.daily[0].summary}
+      </div>
+      <div ref={elRef} className="flex border-t scrollbar-hidden overflow-x-scroll">
+        {hourlyforecast.hourly?.map(forecast => {
           return (
-            <div className="flex flex-col px-2" key={forecast.dt}>
-              <div className=" flex">
+            <div className="flex flex-col mx-1 items-center justify-center text-center" key={forecast.dt}>
+              <div className="w-12">
                 {
-                  new Date(forecast.dt_txt).toLocaleTimeString([], { hour: 'numeric', hour12: true })
+                  new Date(forecast.dt * 1000).toLocaleTimeString([], { hour: 'numeric', hour12: true })
                 }
               </div>
 
               {getWeatherIcon(forecast.weather[0].icon, 'w-10 h-10')}
-              <div className="flex text-sm">
-                <div className="text-slate-200">{forecast.main.temp_max.toString().split('.')[0]} </div>
-                <div className="h-full mx-2 relative">
-                  <div
-                    className="absolute border-l border-gray-500"
-                    style={{
-                      top: '20%',
-                      bottom: '20%',
-                      left: '0',
-                      width: '1px',
-                    }}
-                  ></div>
-                </div>
-                <div className="text-slate-500">{forecast.main.temp_min.toString().split('.')[0]}</div>
+              <div className="flex text-sm  text-slate-200">
+                {forecast.temp.toString().split('.')[0]}
               </div>
+              {/* <div className="h-full mx-2 relative">
+                <div
+                  className="absolute border-l border-gray-500"
+                  style={{
+                    top: '20%',
+                    bottom: '20%',
+                    left: '0',
+                    width: '1px',
+                  }}
+                ></div>
+              </div> */}
+              {/* <div className="text-slate-500">{forecast.main.temp_min.toString().split('.')[0]}</div> */}
+
 
             </div>
           )

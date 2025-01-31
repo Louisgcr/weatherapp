@@ -35,7 +35,7 @@ export const getWeatherIcon = (icon: string, className: string) => {
     case '09n':
       return <img src="https://bmcdn.nl/assets/weather-icons/v2.0/fill/overcast-night-drizzle.svg" alt="Overcast Drizzle Night" className={className} />
     case '10d':
-      return <img src="https://bmcdn.nl/assets/weather-icons/v2.0/fill/overcast-day-rain.svg" alt="Overcast Rain Day" className={className} />
+      return <img src="https://bmcdn.nl/assets/weather-icons/v2.0/fill/partly-cloudy-day-rain.svg" alt="Overcast Rain Day" className={className} />
     case '10n':
       return <img src="https://bmcdn.nl/assets/weather-icons/v2.0/fill/partly-cloudy-night-rain.svg" alt="Overcast Rain Night" className={className} />
     case '11d':

@@ -9,7 +9,7 @@ const VisibilityWidget = ({ data, description }: IVisibilityWidgetProps) => {
 
   return (
     <Card icon="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" title="Visibility" >
-      <div className="flex flex-col w-full p-4">
+      <div className="flex flex-col w-full pl-8 p-4">
 
         <div className="flex w-full mx-auto text-3xl ">
           <div className="pr-0.5">{(data / 1000).toString()}</div>
