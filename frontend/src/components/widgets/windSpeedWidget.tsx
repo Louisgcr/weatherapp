@@ -16,12 +16,12 @@ const WindSpeedWidget = ({ data }: IWindSpeedWidgetProps) => {
           <div className="flex w-full mx-auto py-2">
             <div className="flex-grow">Wind</div>
             <div className="pr-0.5">{data.speed.toString().split('.')[0]}</div>
-            <div>km/h</div>
+            <div>m/s</div>
           </div>
           {data.gust && <div className="flex w-full mx-auto border-t border-slate-200 border-opacity-50 py-2">
             <div className="flex-grow">Gust</div>
             <div className="pr-0.5">{data.gust.toString().split('.')[0]}</div>
-            <div>km/h</div>
+            <div>m/s</div>
           </div>}
           <div className="flex w-full mx-auto border-t border-slate-200 border-opacity-50 py-2">
             <div className="flex-grow">Direction</div>
@@ -38,7 +38,7 @@ const WindSpeedWidget = ({ data }: IWindSpeedWidgetProps) => {
           <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center">
             <div className="flex flex-col items-center text-xs font-bold">
               <div className="flex">{data.speed.toString().split('.')[0]}</div>
-              <div className="flex font-normal ">km/h</div>
+              <div className="flex font-normal ">m/s</div>
             </div>
           </div>
         </div>

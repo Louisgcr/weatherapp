@@ -7,7 +7,11 @@ import usePlacesAutocomplete, {
 import useKeyPress from 'hooks/useKeyPress';
 import { CloseIcon, SearchIcon } from 'assets/icons/icons';
 
-const SearchBar = () => {
+interface ISearchBarProps {
+  onSelect: (latLon: { description: string, lat: number, lon: number }) => void;
+}
+
+const SearchBar = ({ onSelect }: ISearchBarProps) => {
 
   const {
     ready,
@@ -24,6 +28,7 @@ const SearchBar = () => {
   });
 
   const [search, setSearch] = useState('');
+  const [idx, setIdx] = useState(-1);
 
   const arrowUpPressed = useKeyPress('ArrowUp');
   const arrowDownPressed = useKeyPress('ArrowDown');
@@ -50,40 +55,71 @@ const SearchBar = () => {
     }
   }, []);
 
-  const handleSelect = async (description) => {
+  useEffect(() => {
+    if (search.length <= 0) {
+      return
+    }
+
+    if (arrowDownPressed) {
+      setIdx((prev) => (prev + 1) % data.length);
+    }
+
+    if (arrowUpPressed) {
+      if (idx === -1) {
+        setIdx(() => (data.length - 1));
+      } else {
+        setIdx((prev) => (prev - 1 + data.length) % data.length);
+      }
+    }
+
+    if (enterPressed) {
+      handleSelect(data[idx].description);
+    }
+
+  }, [arrowDownPressed, arrowUpPressed, enterPressed]);
+
+  const handleSelect = async (description: string) => {
     try {
       const results = await getGeocode({ address: description });
       const { lat, lng } = await getLatLng(results[0]);
-      // onSelect({ lat, lng }); // Pass lat/lon to the parent component
+      onSelect({ description: description, lat, lon: lng }); // Pass lat/lon to the parent component
       clearSuggestions();
       setValue(description, false);
+      setSearch("")
+      setIdx(-1);
     } catch (error) {
       console.error("Error getting geolocation:", error);
     }
   };
 
-  console.log("suggestions", data);
 
   return (
-    <div ref={menuRef} className="flex relative w-full my-3">
-      <div className={`absolute inset-y-0 right-0 flex items-center pr-2.5 pointer-events-none ${search?.length === 0 ? "motion-rotate-in-[90deg] motion-opacity-in-100" : "opacity-0"}`}>
+    <div ref={menuRef} className="group flex  relative w-full bg-blue-600 bg-opacity-30 rounded-lg p-4">
+      <div className={`absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none ${search?.length === 0 ? "motion-rotate-in-[90deg] motion-opacity-in-100" : "opacity-0"}`}>
         <SearchIcon className='fill-current' />
       </div>
-      <div className={`absolute inset-y-0 right-0 flex items-center pr-2.5 cursor-pointer hover:text-blue-500 ${search?.length !== 0 ? "motion-rotate-in-[-90deg] motion-opacity-in-100" : "opacity-0"}`}
+      <div className={`absolute inset-y-0 right-0 flex items-center pr-5 cursor-pointer hover:text-blue-500 ${search?.length !== 0 ? "motion-rotate-in-[-90deg] motion-opacity-in-100" : "opacity-0"}`}
         onClick={() => setSearch('')}>
         <CloseIcon className='fill-current' />
       </div>
 
       <input ref={inputRef}
         type='text'
-        className='flex w-full pl-10 border border-gray-500 rounded-lg bg-transparent focus:ring-blue-500 focus:border-blue-500'
-        placeholder='Search for a country'
+        className='flex w-full pl-10 text-white placeholder-slate-300 border border-slate-300 rounded-lg bg-transparent focus:border-white outline-none'
+        placeholder='Search for a location'
         value={search}
         onChange={handleChange}
         onFocus={() => { }}>
       </input>
 
-
+      <div className='absolute top-14 left-0 w-full bg-slate-300 rounded-lg shadow-lg'>
+        {search?.length > 0 && data.map((item, index) => (
+          <div key={index} className={`p-4 cursor-pointer hover:bg-gray-100 hover:rounded-lg ${index === idx ? 'bg-gray-100 rounded-lg' : ''}`}
+            onClick={() => handleSelect(item.description)}>
+            <p className='text-gray-800'>{item.description}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
