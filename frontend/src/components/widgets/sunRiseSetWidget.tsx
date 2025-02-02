@@ -48,8 +48,6 @@ const SunRiseSetWidget = ({ sunrise, sunset }: ISunRiseSetWidgetProps) => {
 
   const { x, y } = getCurvePosition();
 
-  console.log(x, y)
-
   return (
     <Card icon="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" title="Sunrise / Sunset" >
       <div className="flex flex-col w-full ">

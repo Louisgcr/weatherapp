@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from 'axios';
 
-import { IForecast, IWeatherAPI3, IWeatherAPI3Response } from 'interface';
+import { ILatLongDescription, IWeatherAPI3, IWeatherAPI3Response } from 'interface';
 
 import Forecast from './forecast';
 import { getWeatherIcon } from 'utils/getIcon';
 import MapWidget from './widgets/mapWidget';
 import SearchBar from './navigation/SearchBar';
 import VisibilityWidget from './widgets/visibilityWidget';
-import WindSpeedChartWidget from './widgets/windSpeedChartWidget';
+import WindSpeedChartWidget from './charts/windSpeedChartWidget';
 import WindSpeedWidget from './widgets/windSpeedWidget';
 
 import Celsius from 'assets/icons/weather-icons/celsius.svg?react';
@@ -17,8 +18,8 @@ import ThermometerColder from 'assets/icons/weather-icons/thermometer-colder.svg
 import HumidityWidget from './widgets/humidityWidget';
 import SunRiseSetWidget from './widgets/sunRiseSetWidget';
 import PressureWidget from './widgets/pressureWidget';
-
-
+import Home from 'pages/Home';
+import WindSpeedPage from 'pages/WindSpeedChart';
 
 
 const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
@@ -30,8 +31,6 @@ function App() {
   });
 
   const [backgroundImageUrl, setBackgroundImageUrl] = useState('/sunny.webp');
-  // const [weather, setWeather] = useState<IForecast['list'][0] | null>(null);
-  // const [forecast, setForecast] = useState<IForecast | null>(null);
 
   const [weatherV3, setWeatherV3] = useState<IWeatherAPI3Response | null>({
     "lat": 1.3754,
@@ -1747,49 +1746,49 @@ function App() {
     ]
   }
   );
-  const [latLong, setLatLong] = useState({ description: "", lat: 0, lon: 0 });
+  const [latLong, setLatLong] = useState<ILatLongDescription>({ description: "", lat: 0, long: 0 });
 
-  const fetchWeatherFromLatLon = async (lat: number, lon: number) => {
-    try {
-      const weatherResponse = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`
-      );
+  // const fetchWeatherFromLatLon = async (lat: number, lon: number) => {
+  //   try {
+  //     const weatherResponse = await fetch(
+  //       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`
+  //     );
 
-      if (!weatherResponse.ok) {
-        throw new Error("Failed to fetch weather data");
-      }
+  //     if (!weatherResponse.ok) {
+  //       throw new Error("Failed to fetch weather data");
+  //     }
 
-      const data = await weatherResponse.json();
-      setWeather(data);
+  //     const data = await weatherResponse.json();
+  //     setWeather(data);
 
-      return { lat: lat, lon: lon, name: data.name as string };
+  //     return { lat: lat, lon: lon, name: data.name as string };
 
-    } catch (err) {
-      if (err instanceof Error) {
-        console.log(err.message);
-      } else {
-        console.log("An unknown error occurred");
-      }
-    }
-  }
+  //   } catch (err) {
+  //     if (err instanceof Error) {
+  //       console.log(err.message);
+  //     } else {
+  //       console.log("An unknown error occurred");
+  //     }
+  //   }
+  // }
 
-  const fetchForecastFromLatLon = async (lat: number, lon: number) => {
-    try {
-      const forecastResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric `);
-      const forecastdata = forecastResponse.data;
-      forecastdata.list = (forecastdata as IForecast).list.filter((item) => {
-        // Filter out past data base on current date -3h
-        return new Date(item.dt_txt) > new Date();
-      });
-      setForecast(forecastResponse.data)
-    } catch (err) {
-      if (err instanceof Error) {
-        console.log(err.message);
-      } else {
-        console.log("An unknown error occurred");
-      }
-    }
-  }
+  // const fetchForecastFromLatLon = async (lat: number, lon: number) => {
+  //   try {
+  //     const forecastResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric `);
+  //     const forecastdata = forecastResponse.data;
+  //     forecastdata.list = (forecastdata as IForecast).list.filter((item) => {
+  //       // Filter out past data base on current date -3h
+  //       return new Date(item.dt_txt) > new Date();
+  //     });
+  //     setForecast(forecastResponse.data)
+  //   } catch (err) {
+  //     if (err instanceof Error) {
+  //       console.log(err.message);
+  //     } else {
+  //       console.log("An unknown error occurred");
+  //     }
+  //   }
+  // }
 
   const fetchWeatherFromLatLonV3 = async (lat: number, lon: number) => {
     try {
@@ -1832,7 +1831,6 @@ function App() {
 
   //Fetch initial location from browser
   // useEffect(() => {
-
   //   const fetchLocation = () => {
   //     if ("geolocation" in navigator) {
   //       navigator.geolocation.getCurrentPosition(
@@ -1885,94 +1883,107 @@ function App() {
   useEffect(() => {
     // fetchWeatherFromLatLon(latLong.lat, latLong.lon);
     // fetchForecastFromLatLon(latLong.lat, latLong.lon);
-    fetchWeatherFromLatLonV3(latLong.lat, latLong.lon);
+    fetchWeatherFromLatLonV3(latLong.lat, latLong.long);
   }, [latLong]);
 
   return (
-    <div className={`relative overflow-auto text-white `} >
-      {/* Background image */}
-      <div
-        className={`fixed inset-0 min-h-screen bg-cover bg-center blur-sm opacity-50 -z-10`}
-        style={{
-          backgroundImage: `url(${backgroundImageUrl})`,
-        }}
-      />
+    <Router>
+      <Routes>
+        <Route path="/"
+          element={
+            <Home setLatLong={setLatLong} latLong={latLong} weatherV3={weatherV3} backgroundImageUrl={backgroundImageUrl} />
+          }
+        />
+        <Route path="/wind-speed"
+          element={
+            <WindSpeedPage setLatLong={setLatLong} latLong={latLong} weatherV3={weatherV3} backgroundImageUrl={backgroundImageUrl} />}
+        />
+      </Routes>
+    </Router>
+    // <div className={`relative overflow-auto text-white `} >
+    //   {/* Background image */}
+    //   <div
+    //     className={`fixed inset-0 min-h-screen bg-cover bg-center blur-sm opacity-50 -z-10`}
+    //     style={{
+    //       backgroundImage: `url(${backgroundImageUrl})`,
+    //     }}
+    //   />
 
-      <div className={`h-screen flex filter-none `}>
-        <div className="relative max-w-7xl pl-4 sm:static sm:pl-6 lg:pl-8">
-          <div className="sm:max-w-lg gap-4">
-            <div className='my-4'>
-              <SearchBar onSelect={setLatLong} />
-            </div>
-            {
-              weatherV3 &&
-              <div className='flex bg-blue-600 bg-opacity-30 rounded-lg p-4 w-full'>
-                <div className='flex flex-col items-center justify-center text-center w-1/2'>
-                  <div className='flex capitalize text-lg'>{latLong.description}</div>
-                  <div className='flex text-6xl'>
-                    {getWeatherIcon(weatherV3.current.weather[0].icon, 'w-16 h-16')}
-                    <div>{weatherV3.current.temp.toString().split('.')[0]}</div>
-                    <div className='text-base pl-2 py-2'>°C </div>
-                    <div className='text-base  p-2'>| </div>
-                    <div className='text-base py-2'> °F </div>
-                  </div>
-                  <div className='flex'>
-                    Feels like {weatherV3.current.feels_like.toString().split('.')[0]}°C
-                  </div>
-                  <div className='capitalize'>{weatherV3.current.weather[0].description}</div>
-                  <div className=' flex items-center justify-center'>
-                  </div>
-                </div>
+    //   <div className={`h-screen flex filter-none `}>
+    //     <div className="relative max-w-7xl pl-4 sm:static sm:pl-6 lg:pl-8">
+    //       <div className="sm:max-w-lg gap-4">
+    //         <div className='my-4'>
+    //           <SearchBar onSelect={setLatLong} />
+    //         </div>
+    //         {
+    //           weatherV3 &&
+    //           <div className='flex bg-blue-600 bg-opacity-30 rounded-lg p-4 w-full'>
+    //             <div className='flex flex-col items-center justify-center text-center w-1/2'>
+    //               <div className='flex capitalize text-lg'>{latLong.description}</div>
+    //               <div className='flex text-6xl'>
+    //                 {getWeatherIcon(weatherV3.current.weather[0].icon, 'w-16 h-16')}
+    //                 <div>{weatherV3.current.temp.toString().split('.')[0]}</div>
+    //                 <div className='text-base pl-2 py-2'>°C </div>
+    //                 <div className='text-base  p-2'>| </div>
+    //                 <div className='text-base py-2'> °F </div>
+    //               </div>
+    //               <div className='flex'>
+    //                 Feels like {weatherV3.current.feels_like.toString().split('.')[0]}°C
+    //               </div>
+    //               <div className='capitalize'>{weatherV3.current.weather[0].description}</div>
+    //               <div className=' flex items-center justify-center'>
+    //               </div>
+    //             </div>
 
-                <div className='w-1/2 grid grid-cols-5 items-center justify-center gap-1'>
-                  <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/humidity.svg" alt="Humidity" className="w-10 h-19" />
-                  <a className='col-span-2'>Humidity</a>
-                  <a className='col-span-2'>{weatherV3.current.humidity}%</a>
+    //             <div className='w-1/2 grid grid-cols-5 items-center justify-center gap-1'>
+    //               <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/humidity.svg" alt="Humidity" className="w-10 h-19" />
+    //               <a className='col-span-2'>Humidity</a>
+    //               <a className='col-span-2'>{weatherV3.current.humidity}%</a>
 
-                  <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" alt="wind" className="w-10 h-19" />
-                  <a className='col-span-2'>Wind</a>
-                  <a className='col-span-2'>{weatherV3.current.wind_speed}m/s</a>
+    //               <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" alt="wind" className="w-10 h-19" />
+    //               <a className='col-span-2'>Wind</a>
+    //               <a className='col-span-2'>{weatherV3.current.wind_speed}m/s</a>
 
-                  <img src={`https://bmcdn.nl/assets/weather-icons/v2.0/line/uv-index-${Math.ceil(weatherV3.current.uvi)}.svg`} alt="pressure" className="w-10 h-19" />
-                  <a className='col-span-2'>UV</a>
-                  <a className='col-span-2'>{weatherV3.current.uvi}</a>
+    //               <img src={`https://bmcdn.nl/assets/weather-icons/v2.0/line/uv-index-${Math.ceil(weatherV3.current.uvi)}.svg`} alt="pressure" className="w-10 h-19" />
+    //               <a className='col-span-2'>UV</a>
+    //               <a className='col-span-2'>{weatherV3.current.uvi}</a>
 
-                  <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/pressure.svg" alt="pressure" className="w-10 h-19" />
-                  <a className='col-span-2'>Press</a>
-                  <a className='col-span-2'>{weatherV3.current.pressure}Ha</a>
+    //               <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/pressure.svg" alt="pressure" className="w-10 h-19" />
+    //               <a className='col-span-2'>Press</a>
+    //               <a className='col-span-2'>{weatherV3.current.pressure}Ha</a>
 
-                </div>
-              </div>
-            }
+    //             </div>
+    //           </div>
+    //         }
 
-            {
-              weatherV3 &&
-              <div className='mt-4 flex flex-col bg-blue-600 bg-opacity-30 rounded-lg p-4 w-full'>
-                <Forecast hourlyforecast={weatherV3} />
-              </div>
-            }
+    //         {
+    //           weatherV3 &&
+    //           <div className='mt-4 flex flex-col bg-blue-600 bg-opacity-30 rounded-lg p-4 w-full'>
+    //             <Forecast hourlyforecast={weatherV3} />
+    //           </div>
+    //         }
 
-            {weatherV3 && <WindSpeedWidget wind_speed={weatherV3.current.wind_speed} wind_deg={weatherV3.current.wind_deg} wind_gust={weatherV3.hourly[0].wind_gust} />}
+    //         {weatherV3 && <WindSpeedWidget wind_speed={weatherV3.current.wind_speed} wind_deg={weatherV3.current.wind_deg} wind_gust={weatherV3.hourly[0].wind_gust} />}
 
-            <div className='grid grid-cols-3 gap-4 py-4'>
-              {weatherV3 && <VisibilityWidget data={weatherV3.current.visibility} description={weatherV3.current.weather[0].description} />}
-              {weatherV3 && <HumidityWidget data={weatherV3.current.humidity} dewpoint={weatherV3.current.dew_point} />}
-              {weatherV3 && <SunRiseSetWidget sunrise={weatherV3.current.sunrise} sunset={weatherV3.current.sunset} />}
-              {weatherV3 && <PressureWidget pressure={weatherV3.current.pressure} />}
-            </div>
+    //         <div className='grid grid-cols-3 gap-4 py-4'>
+    //           {weatherV3 && <VisibilityWidget data={weatherV3.current.visibility} description={weatherV3.current.weather[0].description} />}
+    //           {weatherV3 && <HumidityWidget data={weatherV3.current.humidity} dewpoint={weatherV3.current.dew_point} />}
+    //           {weatherV3 && <SunRiseSetWidget sunrise={weatherV3.current.sunrise} sunset={weatherV3.current.sunset} />}
+    //           {weatherV3 && <PressureWidget pressure={weatherV3.current.pressure} />}
+    //         </div>
 
-          </div>
-        </div>
+    //       </div>
+    //     </div>
 
-        {/* <div className="w-full h-full px-4 rounded-lg">
-          <MapWidget />
-        </div> */}
-        {/* {forecast && <div className='m-4 bg-blue-600 bg-opacity-30 rounded-lg p-4'>
-          <WindSpeedChartWidget data={forecast} />
-        </div>
-        } */}
-      </div>
-    </div>
+    //     {/* <div className="w-full h-full px-4 rounded-lg">
+    //       <MapWidget />
+    //     </div> */}
+    //     {/* {forecast && <div className='m-4 bg-blue-600 bg-opacity-30 rounded-lg p-4'>
+    //       <WindSpeedChartWidget data={forecast} />
+    //     </div>
+    //     } */}
+    //   </div>
+    // </div>
   )
 }
 

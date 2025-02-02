@@ -13,7 +13,7 @@ import {
 import { Line } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 import annotationPlugin from "chartjs-plugin-annotation";
-import { IForecast } from "interface";
+import { IWeatherAPI3Response } from "interface";
 
 ChartJS.register(
   CategoryScale,
@@ -28,18 +28,18 @@ ChartJS.register(
 );
 
 interface IWindSpeedChartWidgetProps {
-  data: IForecast
+  hourlyforecast: IWeatherAPI3Response;
 }
 
-const WindSpeedChartWidget = ({ data }: IWindSpeedChartWidgetProps) => {
+const WindSpeedChartWidget = ({ hourlyforecast }: IWindSpeedChartWidgetProps) => {
   const chartRef = useRef(null);
 
   // Generate mock data (example)
   const generateData = (gust: boolean) => {
-    const windList = data.list.map((item) => {
+    const windList = hourlyforecast.hourly?.map((item) => {
       return {
         x: new Date(item.dt * 1000),
-        y: gust ? item.wind.gust : item.wind.speed,
+        y: gust ? item.wind_gust : item.wind_speed,
       }
     });
     return windList

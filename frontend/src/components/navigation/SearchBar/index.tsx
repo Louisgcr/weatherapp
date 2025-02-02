@@ -6,9 +6,10 @@ import usePlacesAutocomplete, {
 
 import useKeyPress from 'hooks/useKeyPress';
 import { CloseIcon, SearchIcon } from 'assets/icons/icons';
+import { ILatLongDescription } from 'interface';
 
 interface ISearchBarProps {
-  onSelect: (latLon: { description: string, lat: number, lon: number }) => void;
+  onSelect: (latLon: ILatLongDescription) => void;
 }
 
 const SearchBar = ({ onSelect }: ISearchBarProps) => {
@@ -82,7 +83,7 @@ const SearchBar = ({ onSelect }: ISearchBarProps) => {
     try {
       const results = await getGeocode({ address: description });
       const { lat, lng } = await getLatLng(results[0]);
-      onSelect({ description: description, lat, lon: lng }); // Pass lat/lon to the parent component
+      onSelect({ description: description, lat, long: lng }); // Pass lat/lon to the parent component
       clearSuggestions();
       setValue(description, false);
       setSearch("")

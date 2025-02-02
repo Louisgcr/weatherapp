@@ -1,4 +1,4 @@
-import { IWind } from "interface";
+
 import Card
   from "./card";
 import { NavigationIcon } from "assets/icons/icons";
@@ -12,7 +12,7 @@ interface IWindSpeedWidgetProps {
 const WindSpeedWidget = ({ wind_speed, wind_deg, wind_gust }: IWindSpeedWidgetProps) => {
 
   return (
-    <Card icon="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" title="Wind" >
+    <Card icon="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" title="Wind" link="/wind-speed">
       <div className="flex w-full">
         <div className="flex flex-col w-2/3 pl-8 pr-4 ">
           <div className="flex w-full mx-auto items-center ">
