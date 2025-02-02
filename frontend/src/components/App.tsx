@@ -16,6 +16,7 @@ import Thermometer from 'assets/icons/weather-icons/thermometer.svg?react';
 import ThermometerColder from 'assets/icons/weather-icons/thermometer-colder.svg?react';
 import HumidityWidget from './widgets/humidityWidget';
 import SunRiseSetWidget from './widgets/sunRiseSetWidget';
+import PressureWidget from './widgets/pressureWidget';
 
 
 
@@ -1957,7 +1958,7 @@ function App() {
               {weatherV3 && <VisibilityWidget data={weatherV3.current.visibility} description={weatherV3.current.weather[0].description} />}
               {weatherV3 && <HumidityWidget data={weatherV3.current.humidity} dewpoint={weatherV3.current.dew_point} />}
               {weatherV3 && <SunRiseSetWidget sunrise={weatherV3.current.sunrise} sunset={weatherV3.current.sunset} />}
-              {/* {weatherV3 && <SunRiseSetWidget />} */}
+              {weatherV3 && <PressureWidget pressure={weatherV3.current.pressure} />}
             </div>
 
           </div>
