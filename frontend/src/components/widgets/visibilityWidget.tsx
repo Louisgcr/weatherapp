@@ -1,4 +1,5 @@
 import Card from "./card";
+import VisibilityIcon from "assets/icons/visibility.svg?react"
 
 interface IVisibilityWidgetProps {
   data: number;
@@ -8,7 +9,7 @@ interface IVisibilityWidgetProps {
 const VisibilityWidget = ({ data, description }: IVisibilityWidgetProps) => {
 
   return (
-    <Card icon="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" title="Visibility" >
+    <Card iconComponent={<VisibilityIcon className="w-7 h-7 pr-1 fill-current" />} title="Visibility" >
       <div className="flex flex-col w-full pl-8 p-4">
 
         <div className="flex w-full mx-auto text-3xl ">

@@ -1,4 +1,5 @@
 import Card from "./card";
+import HumidityIcon from "assets/icons/humidity.svg?react";
 
 interface IHumidityWidgetProps {
   data: number;
@@ -8,7 +9,7 @@ interface IHumidityWidgetProps {
 const HumidityWidget = ({ data, dewpoint }: IHumidityWidgetProps) => {
 
   return (
-    <Card icon="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" title="Humidity" >
+    <Card iconComponent={<HumidityIcon className="w-7 h-7 pr-1 fill-current" />} title="Humidity" >
       <div className="flex flex-col w-full pl-8 p-4">
 
         <div className="flex w-full mx-auto text-3xl ">

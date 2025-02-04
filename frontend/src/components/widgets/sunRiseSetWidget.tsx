@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Card from "./card";
+import SunRiseSetIcon from "assets/icons/sun-rise-set.svg?react";
 
 interface ISunRiseSetWidgetProps {
   sunrise: number;
@@ -49,7 +50,7 @@ const SunRiseSetWidget = ({ sunrise, sunset }: ISunRiseSetWidgetProps) => {
   const { x, y } = getCurvePosition();
 
   return (
-    <Card icon="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" title="Sunrise / Sunset" >
+    <Card iconComponent={<SunRiseSetIcon className="w-7 h-7 pr-1 fill-current " />} title="Sunrise / Sunset" >
       <div className="flex flex-col w-full ">
         <div className="relative  h-20 mt-4">
           <svg width="100%" height="100%" viewBox="-90 -90 180 100">

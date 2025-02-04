@@ -10,6 +10,8 @@ import SunRiseSetWidget from 'components/widgets/sunRiseSetWidget';
 import PressureWidget from 'components/widgets/pressureWidget';
 
 import { getWeatherIcon } from 'utils/getIcon';
+import HumidityIcon from "assets/icons/humidity.svg?react";
+import PressureIcon from "assets/icons/pressure-guage.svg?react"
 import { IPageProps } from 'interface';
 
 
@@ -26,8 +28,8 @@ function Home({ setLatLong, latLong, weatherV3, backgroundImageUrl }: IPageProps
         }}
       />
 
-      <div className={`h-screen flex filter-none `}>
-        <div className="relative max-w-7xl pl-4 sm:static sm:pl-6 lg:pl-8">
+      <div className={`h-screen flex filter-none w-full`}>
+        <div className="relative pl-36 pr-8 py-8">
           <div className="sm:max-w-lg gap-4">
             <div className='my-4'>
               <SearchBar onSelect={setLatLong} />
@@ -53,7 +55,7 @@ function Home({ setLatLong, latLong, weatherV3, backgroundImageUrl }: IPageProps
                 </div>
 
                 <div className='w-1/2 grid grid-cols-5 items-center justify-center gap-1'>
-                  <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/humidity.svg" alt="Humidity" className="w-10 h-19" />
+                  <HumidityIcon className="w-10 h-7 pr-1 text-blue-600 fill-current" />
                   <a className='col-span-2'>Humidity</a>
                   <a className='col-span-2'>{weatherV3.current.humidity}%</a>
 
@@ -65,7 +67,7 @@ function Home({ setLatLong, latLong, weatherV3, backgroundImageUrl }: IPageProps
                   <a className='col-span-2'>UV</a>
                   <a className='col-span-2'>{weatherV3.current.uvi}</a>
 
-                  <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/pressure.svg" alt="pressure" className="w-10 h-19" />
+                  <PressureIcon className="w-10 h-7 pr-1 fill-current" />
                   <a className='col-span-2'>Press</a>
                   <a className='col-span-2'>{weatherV3.current.pressure}Ha</a>
 
@@ -94,9 +96,9 @@ function Home({ setLatLong, latLong, weatherV3, backgroundImageUrl }: IPageProps
           </div>
         </div>
 
-        {/* <div className="w-full h-full px-4 rounded-lg">
+        <div className="w-full h-full py-12 pr-36 rounded-lg ">
           <MapWidget />
-        </div> */}
+        </div>
 
       </div>
     </div>

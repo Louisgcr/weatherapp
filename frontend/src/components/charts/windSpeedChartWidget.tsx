@@ -84,14 +84,22 @@ const WindSpeedChartWidget = ({ hourlyforecast }: IWindSpeedChartWidgetProps) =>
         title: {
           display: true,
           text: "Time (3-hour intervals)",
+          color: "rgba(255, 255, 255, 0.9)",
         },
+        ticks: {
+          color: "rgba(255, 255, 255, 0.9)",
+        }
       },
       y: {
         beginAtZero: true,
         title: {
           display: true,
           text: "Speed m/s",
+          color: "rgba(255, 255, 255, 0.9)",
         },
+        ticks: {
+          color: "rgba(255, 255, 255, 0.9)",
+        }
       },
     },
     elements: {
@@ -102,6 +110,12 @@ const WindSpeedChartWidget = ({ hourlyforecast }: IWindSpeedChartWidgetProps) =>
     plugins: {
       legend: {
         display: true,
+        labels: {
+          color: "rgba(255, 255, 255, 0.9)", // 👈 Change legend text color
+          font: {
+            size: 14, // Adjust font size if needed
+          },
+        },
       },
       tooltip: {
         mode: "nearest",
