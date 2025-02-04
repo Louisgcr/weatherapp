@@ -1790,6 +1790,19 @@ function App() {
   //   }
   // }
 
+  const getAllLocationFrom = async () => {
+    try {
+      const response = await fetch('http://localhost:5174/api/locations');
+      console.log(response)
+    } catch (err) {
+      if (err instanceof Error) {
+        console.log(err.message);
+      } else {
+        console.log("An unknown error occurred");
+      }
+    }
+  }
+
   const fetchWeatherFromLatLonV3 = async (lat: number, lon: number) => {
     try {
       const weatherResponse = await fetch(
@@ -1883,6 +1896,7 @@ function App() {
   useEffect(() => {
     // fetchWeatherFromLatLon(latLong.lat, latLong.lon);
     // fetchForecastFromLatLon(latLong.lat, latLong.lon);
+    getAllLocationFrom();
     fetchWeatherFromLatLonV3(latLong.lat, latLong.long);
   }, [latLong]);
 

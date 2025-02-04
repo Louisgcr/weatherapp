@@ -39,6 +39,9 @@ export interface IMinutelyWeatherAPI3 {
   precipitation: number;
 }
 
+export interface IRainWeatherAPI3 {
+  '1h': number;
+}
 export interface IHourlyWeatherAPI3 {
   dt: number;
   temp: number;
@@ -54,6 +57,7 @@ export interface IHourlyWeatherAPI3 {
   wind_gust: number;
   weather: IWeatherAPI3[];
   pop: number;
+  rain?: IRainWeatherAPI3;
 }
 
 export interface IDailyWeatherAPI3 {
@@ -87,6 +91,8 @@ export interface IDailyWeatherAPI3 {
   weather: IWeatherAPI3[];
   clouds: number;
   pop: number;
+  rain?: number;
+  uvi?: number;
 }
 export interface IWeatherAPI3Response {
   lat: number;
