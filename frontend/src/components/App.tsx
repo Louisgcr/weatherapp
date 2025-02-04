@@ -1792,8 +1792,9 @@ function App() {
 
   const getAllLocationFrom = async () => {
     try {
-      const response = await fetch('http://localhost:5174/api/locations');
-      console.log(response)
+      const response = await axios.get("http://localhost:5174/api/locations");
+      // const response = await fetch('http://localhost:5174/api/locations');
+      console.log(response.data[0])
     } catch (err) {
       if (err instanceof Error) {
         console.log(err.message);
