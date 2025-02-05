@@ -61,9 +61,9 @@ const Forecast = ({ hourlyforecast }: IForecastProps) => {
 
   return (
     <div className="flex flex-col">
-      <div className="text-base pb-2">
+      {/* <div className="text-base pb-2">
         {hourlyforecast.daily[0].summary}
-      </div>
+      </div> */}
       <div className="flex p-3">
         <div className={`${tempOn ? "border-b-2 border-yellow-400 font-bold opacity-100" : "font-normal opacity-70"} cursor-pointer`} onClick={() => setTempOn(true)}>Temperature</div>
         <div className="border-l mx-2"></div>
@@ -86,11 +86,11 @@ const Forecast = ({ hourlyforecast }: IForecastProps) => {
           {hourlyforecast.hourly?.map(forecast => {
             return (
               //Rain Precipitation
-              <div className="flex flex-col  items-center justify-center text-center" key={forecast.dt}>
+              <div className="flex flex-col items-center justify-center text-center" key={forecast.dt}>
                 {
                   tempOn &&
-                  <div className="w-full " style={{ transform: "translateY(-56px)" }}>
-                    <div className="flex text-sm mx-1 text-slate-200">
+                  <div className="flex w-full text-center items-center justify-center" style={{ transform: "translateY(-56px)" }}>
+                    <div className="flex w-full  text-xs text-center items-center justify-center  text-slate-200">
                       {forecast.temp.toFixed(1)} °C
                     </div>
                   </div>
@@ -98,7 +98,7 @@ const Forecast = ({ hourlyforecast }: IForecastProps) => {
 
                 {!tempOn &&
                   <div className="w-full">
-                    <div className="flex text-sm mx-1 text-slate-200">
+                    <div className="flex text-xs text-center mx-1 text-slate-200">
                       {(forecast.pop * 100).toString().split('.')[0]} %
                     </div>
                     <div className="h-14 w-full relative ">

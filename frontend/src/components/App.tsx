@@ -2,24 +2,11 @@ import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import axios from 'axios';
 
-import { ILatLongDescription, IWeatherAPI3, IWeatherAPI3Response } from 'interface';
+import { ILatLongDescription, IWeatherAPI3Response } from 'interface';
 
-import Forecast from './forecast';
-import { getWeatherIcon } from 'utils/getIcon';
-import MapWidget from './widgets/mapWidget';
-import SearchBar from './navigation/SearchBar';
-import VisibilityWidget from './widgets/visibilityWidget';
-import WindSpeedChartWidget from './charts/windSpeedChartWidget';
-import WindSpeedWidget from './widgets/windSpeedWidget';
-
-import Celsius from 'assets/icons/weather-icons/celsius.svg?react';
-import Thermometer from 'assets/icons/weather-icons/thermometer.svg?react';
-import ThermometerColder from 'assets/icons/weather-icons/thermometer-colder.svg?react';
-import HumidityWidget from './widgets/humidityWidget';
-import SunRiseSetWidget from './widgets/sunRiseSetWidget';
-import PressureWidget from './widgets/pressureWidget';
 import Home from 'pages/Home';
 import WindSpeedPage from 'pages/WindSpeedChart';
+import SideBar from './navigation/SideBar';
 
 
 const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
@@ -1748,47 +1735,6 @@ function App() {
   );
   const [latLong, setLatLong] = useState<ILatLongDescription>({ description: "", lat: 0, long: 0 });
 
-  // const fetchWeatherFromLatLon = async (lat: number, lon: number) => {
-  //   try {
-  //     const weatherResponse = await fetch(
-  //       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`
-  //     );
-
-  //     if (!weatherResponse.ok) {
-  //       throw new Error("Failed to fetch weather data");
-  //     }
-
-  //     const data = await weatherResponse.json();
-  //     setWeather(data);
-
-  //     return { lat: lat, lon: lon, name: data.name as string };
-
-  //   } catch (err) {
-  //     if (err instanceof Error) {
-  //       console.log(err.message);
-  //     } else {
-  //       console.log("An unknown error occurred");
-  //     }
-  //   }
-  // }
-
-  // const fetchForecastFromLatLon = async (lat: number, lon: number) => {
-  //   try {
-  //     const forecastResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric `);
-  //     const forecastdata = forecastResponse.data;
-  //     forecastdata.list = (forecastdata as IForecast).list.filter((item) => {
-  //       // Filter out past data base on current date -3h
-  //       return new Date(item.dt_txt) > new Date();
-  //     });
-  //     setForecast(forecastResponse.data)
-  //   } catch (err) {
-  //     if (err instanceof Error) {
-  //       console.log(err.message);
-  //     } else {
-  //       console.log("An unknown error occurred");
-  //     }
-  //   }
-  // }
 
   const getAllLocationFrom = async () => {
     try {
@@ -1816,7 +1762,6 @@ function App() {
       const data = await weatherResponse.json();
       setWeatherV3(data);
 
-      // return { lat: lat, lon: lon, name: data.name as string };
 
     } catch (err) {
       if (err instanceof Error) {
@@ -1902,19 +1847,79 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route path="/"
-          element={
-            <Home setLatLong={setLatLong} latLong={latLong} weatherV3={weatherV3} backgroundImageUrl={backgroundImageUrl} />
-          }
+      <div className='relative'>
+        {/* Background image */}
+        <div
+          className={`fixed inset-0 min-h-screen bg-cover bg-center blur-sm opacity-50 -z-10`}
+          style={{
+            backgroundImage: `url(${backgroundImageUrl})`,
+          }}
         />
-        <Route path="/wind-speed"
-          element={
-            <WindSpeedPage setLatLong={setLatLong} latLong={latLong} weatherV3={weatherV3} backgroundImageUrl={backgroundImageUrl} />}
-        />
-      </Routes>
+
+        {/* Sidebar */}
+        <SideBar setLatLong={setLatLong} />
+
+
+        <Routes>
+          <Route path="/"
+            element={
+              <Home setLatLong={setLatLong} latLong={latLong} weatherV3={weatherV3} backgroundImageUrl={backgroundImageUrl} />
+            }
+          />
+          <Route path="/wind-speed"
+            element={
+              <WindSpeedPage setLatLong={setLatLong} latLong={latLong} weatherV3={weatherV3} backgroundImageUrl={backgroundImageUrl} />}
+          />
+        </Routes>
+      </div>
     </Router>
   )
 }
 
 export default App
+
+
+
+
+
+// const fetchWeatherFromLatLon = async (lat: number, lon: number) => {
+//   try {
+//     const weatherResponse = await fetch(
+//       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`
+//     );
+
+//     if (!weatherResponse.ok) {
+//       throw new Error("Failed to fetch weather data");
+//     }
+
+//     const data = await weatherResponse.json();
+//     setWeather(data);
+
+//     return { lat: lat, lon: lon, name: data.name as string };
+
+//   } catch (err) {
+//     if (err instanceof Error) {
+//       console.log(err.message);
+//     } else {
+//       console.log("An unknown error occurred");
+//     }
+//   }
+// }
+
+// const fetchForecastFromLatLon = async (lat: number, lon: number) => {
+//   try {
+//     const forecastResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric `);
+//     const forecastdata = forecastResponse.data;
+//     forecastdata.list = (forecastdata as IForecast).list.filter((item) => {
+//       // Filter out past data base on current date -3h
+//       return new Date(item.dt_txt) > new Date();
+//     });
+//     setForecast(forecastResponse.data)
+//   } catch (err) {
+//     if (err instanceof Error) {
+//       console.log(err.message);
+//     } else {
+//       console.log("An unknown error occurred");
+//     }
+//   }
+// }

@@ -31,7 +31,7 @@ interface IWindSpeedChartWidgetProps {
   hourlyforecast: IWeatherAPI3Response;
 }
 
-const UVChartWidget = ({ hourlyforecast }: IWindSpeedChartWidgetProps) => {
+const WindSpeedChartWidget = ({ hourlyforecast }: IWindSpeedChartWidgetProps) => {
   const chartRef = useRef(null);
 
   // Generate mock data (example)
@@ -79,11 +79,11 @@ const UVChartWidget = ({ hourlyforecast }: IWindSpeedChartWidgetProps) => {
           displayFormats: {
             hour: "HH:mm",
           },
-          stepSize: 1,
+          stepSize: 3, // Label every 3 hours
         },
         title: {
           display: true,
-          text: "Time (1-hour intervals)",
+          text: "Time (3-hour intervals)",
           color: "rgba(255, 255, 255, 0.9)",
         },
         ticks: {
@@ -131,4 +131,4 @@ const UVChartWidget = ({ hourlyforecast }: IWindSpeedChartWidgetProps) => {
   );
 };
 
-export default UVChartWidget;
+export default WindSpeedChartWidget;

@@ -49,6 +49,7 @@ const SunRiseSetWidget = ({ sunrise, sunset }: ISunRiseSetWidgetProps) => {
 
   const { x, y } = getCurvePosition();
 
+
   return (
     <Card iconComponent={<SunRiseSetIcon className="w-7 h-7 pr-1 fill-current " />} title="Sunrise / Sunset" >
       <div className="flex flex-col w-full ">

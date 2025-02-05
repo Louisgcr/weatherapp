@@ -4,6 +4,10 @@ export interface ILatLongDescription {
   long: number;
 }
 
+export interface ISidebarProps {
+  setLatLong: (data: ILatLongDescription) => void;
+}
+
 export interface IPageProps {
   setLatLong: (data: ILatLongDescription) => void;
   latLong: ILatLongDescription;
