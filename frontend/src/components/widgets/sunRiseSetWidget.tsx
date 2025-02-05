@@ -16,9 +16,19 @@ const SunRiseSetWidget = ({ sunrise, sunset }: ISunRiseSetWidgetProps) => {
   }, []);
 
   const getCurvePosition = () => {
-    const totalMinutes = (sunset - sunrise) * 60;
-    const elapsedMinutes =
-      (currentTime.getHours() - sunrise) * 60 + currentTime.getMinutes();
+    const currentTime = new Date(); // Get the current time
+
+    // Convert Unix timestamps to Date objects
+    const sunriseDate = new Date(sunrise * 1000);
+    const sunsetDate = new Date(sunset * 1000);
+
+    // Get total daylight duration in minutes
+    const totalMinutes = (sunsetDate.getTime() - sunriseDate.getTime()) / (1000 * 60);
+
+    // Get elapsed minutes since sunrise
+    const elapsedMinutes = (currentTime.getTime() - sunriseDate.getTime()) / (1000 * 60);
+
+    // Calculate progress (between 0 and 1)
     const progress = Math.max(0, Math.min(1, elapsedMinutes / totalMinutes));
 
     const startX = -80;
@@ -42,7 +52,7 @@ const SunRiseSetWidget = ({ sunrise, sunset }: ISunRiseSetWidgetProps) => {
       (1 - t) ** 3 * 10 +
       3 * (1 - t) ** 2 * t * control1Y +
       3 * (1 - t) * t ** 2 * control2Y +
-      t ** 3 * peakY - 10;
+      t ** 3 * peakY;
 
     return { x, y };
   };

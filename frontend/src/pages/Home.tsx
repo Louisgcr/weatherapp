@@ -19,7 +19,7 @@ function Home({ latLong, weatherV3 }: IPageProps) {
   return (
     <div className={`relative overflow-auto text-white `} >
       <div className={`h-screen flex filter-none w-full`}>
-        {weatherV3 && <div className='grid grid-cols-3 w-full px-36 py-8' >
+        {weatherV3 && <div className='grid grid-cols-3 w-full px-36 pb-8 pt-16' >
           <div className="col-span-2 relative pr-4">
             <div className={`flex ${backgroundColor} rounded-lg p-4 w-full`}>
               <div className='flex flex-col items-center justify-center text-center w-1/2'>
