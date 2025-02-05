@@ -65,17 +65,23 @@ const SunRiseSetWidget = ({ sunrise, sunset }: ISunRiseSetWidgetProps) => {
       <div className="flex flex-col w-full ">
         <div className="relative  h-20 mt-4">
           <svg width="100%" height="100%" viewBox="-90 -90 180 100">
+            <defs>
+              <filter id="circleShadow" x="-50%" y="-50%" width="200%" height="200%">
+                <feDropShadow dx="2" dy="2" stdDeviation="3" floodColor="#fbbf24" floodOpacity="0.6" />
+              </filter>
+            </defs>
             <path
               d="M -80 0 C -27 0 -35 -80 0 -80 S 27 0 70 0"
               fill="none"
-              stroke="#fbbf24"
+              stroke="#ffffff"
               strokeWidth="4"
             />
-            <circle
+            <circle className="shadow-lg shadow-amber-300"
               cx={x}
               cy={y}
               r="6"
               fill="#f97316"
+              filter="url(#circleShadow)"
             />
           </svg>
         </div>
