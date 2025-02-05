@@ -1,3 +1,4 @@
+import { useBackground } from "context/BackgroundColorContext";
 import { useNavigate } from "react-router-dom";
 interface ICardProps {
   title: string;
@@ -10,7 +11,7 @@ interface ICardProps {
 const Card = ({ icon, iconComponent, title, children, link }: ICardProps) => {
 
   const navigate = useNavigate();
-
+  const { backgroundColor } = useBackground();
   const handleClick = () => {
     if (link) {
       navigate(link); // Redirect to 
@@ -18,7 +19,7 @@ const Card = ({ icon, iconComponent, title, children, link }: ICardProps) => {
   };
 
   return (
-    <div className={`rounded-lg bg-blue-600 bg-opacity-30  ${link ? "cursor-pointer" : ""}`} onClick={handleClick}>
+    <div className={`rounded-lg ${backgroundColor}  ${link ? "cursor-pointer" : ""}`} onClick={handleClick}>
       <div className="flex items-center mx-4 mt-4">
         {icon &&
           <img src={icon} alt={title} className="w-10 h-10" />}

@@ -93,9 +93,8 @@ const SearchBar = ({ onSelect }: ISearchBarProps) => {
     }
   };
 
-
   return (
-    <div ref={menuRef} className="group flex  relative w-full bg-blue-600 bg-opacity-30 rounded-lg p-4">
+    <div ref={menuRef} className="group flex  relative w-full rounded-lg p-4">
       <div className={`absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none ${search?.length === 0 ? "motion-rotate-in-[90deg] motion-opacity-in-100" : "opacity-0"}`}>
         <SearchIcon className='fill-current' />
       </div>

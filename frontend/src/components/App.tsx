@@ -8,6 +8,9 @@ import Home from 'pages/Home';
 import WindSpeedPage from 'pages/WindSpeedChart';
 import SideBar from './navigation/SideBar';
 
+import { getBackgroundColor, getBackgroundImageUrl } from 'utils/getBackgroundImageUrl';
+import { useBackground } from 'context/BackgroundColorContext';
+
 
 const OPENWEATHER_API_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY;
 
@@ -18,7 +21,7 @@ function App() {
   });
 
   const [backgroundImageUrl, setBackgroundImageUrl] = useState('/sunny.webp');
-
+  const { setBackgroundColor } = useBackground();
   const [weatherV3, setWeatherV3] = useState<IWeatherAPI3Response | null>({
     "lat": 1.3754,
     "lon": 103.9472,
@@ -1761,7 +1764,8 @@ function App() {
 
       const data = await weatherResponse.json();
       setWeatherV3(data);
-
+      setBackgroundImageUrl(getBackgroundImageUrl(data.current.weather[0].id));
+      setBackgroundColor(getBackgroundColor(data.current.weather[0].id));
 
     } catch (err) {
       if (err instanceof Error) {
@@ -1788,43 +1792,43 @@ function App() {
   }, []);
 
   //Fetch initial location from browser
-  // useEffect(() => {
-  //   const fetchLocation = () => {
-  //     if ("geolocation" in navigator) {
-  //       navigator.geolocation.getCurrentPosition(
-  //         async (position) => {
-  //           try {
-  //             const data = await fetchWeatherFromLatLon(position.coords.latitude, position.coords.longitude);
-  //             setLatLong({
-  //               description: "Your Location", // City name
-  //               lat: position.coords.latitude,
-  //               lon: position.coords.longitude
-  //             });
-  //           } catch (err) {
-  //             if (err instanceof Error) {
-  //               console.log(err.message);
-  //             } else {
-  //               console.log("An unknown error occurred");
-  //             }
-  //           }
-  //         },
-  //         (error) => {
-  //           if (error.message === "User denied Geolocation") {
-  //             setLatLong({
-  //               description: "Singapore", // City name
-  //               lat: 1.3503767624777325,
-  //               lon: 103.81403003145931
-  //             });
-  //           } else {
-  //             console.log("An unknown error occurred");
-  //           }
-  //         }
-  //       );
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchLocation = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            try {
+              const data = await fetchWeatherFromLatLonV3(position.coords.latitude, position.coords.longitude);
+              setLatLong({
+                description: "Your Location", // City name
+                lat: position.coords.latitude,
+                long: position.coords.longitude
+              });
+            } catch (err) {
+              if (err instanceof Error) {
+                console.log(err.message);
+              } else {
+                console.log("An unknown error occurred");
+              }
+            }
+          },
+          (error) => {
+            if (error.message === "User denied Geolocation") {
+              setLatLong({
+                description: "Singapore", // City name
+                lat: 1.3503767624777325,
+                long: 103.81403003145931
+              });
+            } else {
+              console.log("An unknown error occurred");
+            }
+          }
+        );
+      }
+    };
 
-  //   fetchLocation();
-  // }, []);
+    fetchLocation();
+  }, []);
 
 
   useEffect(() => {
@@ -1839,11 +1843,9 @@ function App() {
   }, [darkMode]);
 
   useEffect(() => {
-    // fetchWeatherFromLatLon(latLong.lat, latLong.lon);
-    // fetchForecastFromLatLon(latLong.lat, latLong.lon);
     getAllLocationFrom();
     fetchWeatherFromLatLonV3(latLong.lat, latLong.long);
-  }, [latLong]);
+  }, [JSON.stringify(latLong)]);
 
   return (
     <Router>
@@ -1863,12 +1865,12 @@ function App() {
         <Routes>
           <Route path="/"
             element={
-              <Home setLatLong={setLatLong} latLong={latLong} weatherV3={weatherV3} backgroundImageUrl={backgroundImageUrl} />
+              <Home latLong={latLong} weatherV3={weatherV3} />
             }
           />
           <Route path="/wind-speed"
             element={
-              <WindSpeedPage setLatLong={setLatLong} latLong={latLong} weatherV3={weatherV3} backgroundImageUrl={backgroundImageUrl} />}
+              <WindSpeedPage latLong={latLong} weatherV3={weatherV3} />}
           />
         </Routes>
       </div>

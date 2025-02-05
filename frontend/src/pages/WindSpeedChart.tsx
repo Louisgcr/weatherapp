@@ -3,10 +3,13 @@ import WindSpeedChartWidget from 'components/charts/windSpeedChartWidget';
 import { IPageProps } from 'interface';
 import { useNavigate } from "react-router-dom";
 import ArrowBackIcon from 'assets/icons/arrowBackIcon.svg?react';
+import { useBackground } from 'context/BackgroundColorContext';
 
 
 function WindSpeedPage({ weatherV3 }: IPageProps) {
   const navigate = useNavigate();
+
+  const { backgroundColor } = useBackground();
 
   // const maxWindSpeedIndex = weatherV3?.hourly.reduce((maxIndex, current, index, array) =>
   //   current.wind_speed > array[maxIndex].wind_speed ? index : maxIndex, 0);
@@ -34,11 +37,11 @@ function WindSpeedPage({ weatherV3 }: IPageProps) {
       </div>
 
       {maxWindGustIndex && minWindGustIndex && weatherV3 &&
-        <div className='mx-12 p-4 bg-blue-500 bg-opacity-50 rounded-t-lg' >
+        <div className={`mx-12 p-4 ${backgroundColor} rounded-t-lg`} >
           Expect gust speed to be at a high of <b>{weatherV3?.hourly[maxWindGustIndex].wind_speed}m/s</b> at <b>{new Date(weatherV3?.hourly[maxWindGustIndex].dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</b>  and a low of <b>{weatherV3?.hourly[minWindGustIndex].wind_speed}m/s</b> at <b>{new Date(weatherV3?.hourly[minWindGustIndex].dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}</b>
         </div>
       }
-      {weatherV3 && <div className='mx-12 bg-blue-500 bg-opacity-50 rounded-b-lg p-4 h-2/3'>
+      {weatherV3 && <div className={`mx-12 ${backgroundColor} rounded-b-lg p-4 h-2/3`}>
         <WindSpeedChartWidget hourlyforecast={weatherV3} />
       </div>
       }

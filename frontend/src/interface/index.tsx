@@ -9,10 +9,8 @@ export interface ISidebarProps {
 }
 
 export interface IPageProps {
-  setLatLong: (data: ILatLongDescription) => void;
   latLong: ILatLongDescription;
   weatherV3: IWeatherAPI3Response | null;
-  backgroundImageUrl: string;
 }
 
 export interface IWeatherAPI3 {
