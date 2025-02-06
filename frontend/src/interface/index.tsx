@@ -6,6 +6,8 @@ export interface ILatLongDescription {
 
 export interface ISidebarProps {
   setLatLong: (data: ILatLongDescription) => void;
+  locations: ILatLongDescription[];
+  locationData: IWeatherAPI3Response[];
 }
 
 export interface IPageProps {

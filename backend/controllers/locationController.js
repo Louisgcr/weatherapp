@@ -26,3 +26,18 @@ exports.addLocation = (req, res) => {
     res.json({ id: this.lastID, name, latitude, longitude });
   });
 };
+
+// Delete a location
+exports.deleteLocation = (req, res) => {
+  const id = req.params.id;
+
+  db.run("DELETE FROM locations WHERE id = ?", id, function (err) {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    if (this.changes === 0) {
+      return res.status(404).json({ error: `Location with id ${id} not found` });
+    }
+    res.json({ id });
+  });
+};

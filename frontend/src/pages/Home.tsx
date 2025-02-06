@@ -5,60 +5,39 @@ import WindSpeedWidget from 'components/widgets/windSpeedWidget';
 import HumidityWidget from 'components/widgets/humidityWidget';
 import SunRiseSetWidget from 'components/widgets/sunRiseSetWidget';
 import PressureWidget from 'components/widgets/pressureWidget';
+import WeatherSummaryWidget from 'components/widgets/weatherSummeryWidget';
 
-import { getWeatherIcon } from 'utils/getIcon';
-import HumidityIcon from "assets/icons/humidity.svg?react";
-import PressureIcon from "assets/icons/pressure-guage.svg?react"
-import UVIndex from "assets/icons/uv-index.svg?react"
+import SaveIcon from "assets/icons/saveIcon.svg?react";
+
 import { IPageProps } from 'interface';
 import { useBackground } from 'context/BackgroundColorContext';
-
+import axios from 'axios';
 
 function Home({ latLong, weatherV3 }: IPageProps) {
   const { backgroundColor } = useBackground();
+
+  // Add a function to save location
+  const saveLocation = async () => {
+    // Save location to the database
+    await axios.post("http://localhost:5174/api/locations", {
+      latitude: latLong.lat,
+      longitude: latLong.long,
+      name: latLong.description
+    });
+    console.log("Location saved", {
+      lat: latLong.lat,
+      long: latLong.long,
+      description: latLong.description
+    });
+  }
+
   return (
     <div className={`relative overflow-auto text-white `} >
       <div className={`h-screen flex filter-none w-full`}>
         {weatherV3 && <div className='grid grid-cols-3 w-full px-36 pb-8 pt-16' >
           <div className="col-span-2 relative pr-4">
-            <div className={`flex ${backgroundColor} rounded-lg p-4 w-full`}>
-              <div className='flex flex-col items-center justify-center text-center w-1/2'>
-                <div className='flex capitalize text-lg'>{latLong.description}</div>
-                <div className='flex text-6xl'>
-                  {getWeatherIcon(weatherV3.current.weather[0].icon, 'w-16 h-16')}
-                  <div>{weatherV3.current.temp.toString().split('.')[0]}</div>
-                  <div className='text-base pl-2 py-2'>°C </div>
-                  <div className='text-base  p-2'>| </div>
-                  <div className='text-base py-2'> °F </div>
-                </div>
-                <div className='flex'>
-                  Feels like {weatherV3.current.feels_like.toString().split('.')[0]}°C
-                </div>
-                <div className='capitalize'>{weatherV3.current.weather[0].description}</div>
-                <div className=' flex items-center justify-center'>
-                </div>
-              </div>
 
-              <div className='w-1/2 grid grid-cols-5 items-center justify-center gap-1'>
-                <HumidityIcon className="w-10 h-7 pr-1 fill-current" />
-                <a className='col-span-2'>Humidity</a>
-                <a className='col-span-2'>{weatherV3.current.humidity}%</a>
-
-                <img src="https://bmcdn.nl/assets/weather-icons/v2.0/line/wind.svg" alt="wind" className="w-10 h-19" />
-                <a className='col-span-2'>Wind</a>
-                <a className='col-span-2'>{weatherV3.current.wind_speed}m/s</a>
-
-                <UVIndex className="w-10 h-7 pr-1 fill-current" />
-                <a className='col-span-2'>UV</a>
-                <a className='col-span-2'>{weatherV3.current.uvi}</a>
-
-                <PressureIcon className="w-10 h-7 pr-1 fill-current" />
-                <a className='col-span-2'>Press</a>
-                <a className='col-span-2'>{weatherV3.current.pressure}Ha</a>
-
-              </div>
-            </div>
-
+            <WeatherSummaryWidget latLong={latLong} weatherV3={weatherV3} />
 
             <div className={`mt-4 flex flex-col ${backgroundColor} rounded-lg p-4 w-full`}>
               <Forecast hourlyforecast={weatherV3} />
@@ -81,6 +60,19 @@ function Home({ latLong, weatherV3 }: IPageProps) {
         </div>
         }
       </div>
+
+      {/* Add a button to save location */}
+      {latLong.description !== "Your Location" &&
+        <div className='group absolute bottom-0 right-0 m-6' onClick={() => saveLocation()}>
+          <button className=' bg-gray-800 hover:bg-gray-700 text-white font-bold p-2.5 rounded-full'>
+            <SaveIcon className='fill-current w-8 h-8' />
+          </button>
+          {/* Hover prompt */}
+          <div className='hidden group-hover:flex bg-gray-600 text-white text-center text-xs p-2 rounded-lg absolute top-0 left-0 -translate-y-full '>
+            Save location
+          </div>
+        </div>
+      }
     </div>
   )
 }

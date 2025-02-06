@@ -13,7 +13,7 @@ db.serialize(() => {
   db.run(
     `CREATE TABLE IF NOT EXISTS locations (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
+      name TEXT NOT NULL UNIQUE,
       latitude REAL NOT NULL,
       longitude REAL NOT NULL
     )`

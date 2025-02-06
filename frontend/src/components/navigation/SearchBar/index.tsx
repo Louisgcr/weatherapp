@@ -25,7 +25,7 @@ const SearchBar = ({ onSelect }: ISearchBarProps) => {
     requestOptions: {
       /* Define search scope here */
     },
-    debounce: 1000,
+    debounce: 500,
   });
 
   const [search, setSearch] = useState('');
@@ -73,7 +73,7 @@ const SearchBar = ({ onSelect }: ISearchBarProps) => {
       }
     }
 
-    if (enterPressed) {
+    if (enterPressed && idx !== -1) {
       handleSelect(data[idx].description);
     }
 

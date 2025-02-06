@@ -16,6 +16,8 @@ const SunRiseSetWidget = ({ sunrise, sunset }: ISunRiseSetWidgetProps) => {
   }, []);
 
   const getCurvePosition = () => {
+
+    //TODO get time zone of the place
     const currentTime = new Date(); // Get the current time
 
     // Convert Unix timestamps to Date objects
