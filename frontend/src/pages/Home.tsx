@@ -40,8 +40,9 @@ function Home({ latLong, weatherV3, locations, setLocations, locationData, setLo
   return (
     <div className={`relative overflow-auto text-white `} >
       <div className={`h-screen flex filter-none w-full`}>
-        {weatherV3 && <div className='grid grid-cols-3 w-full px-36 pb-8 pt-16' >
-          <div className="col-span-2 relative pr-4">
+
+        {weatherV3 && <div className='grid grid-cols-1 lg:grid-cols-3 w-full pt-8 px-4 md:px-12 lg:px-32' >
+          <div className="col-span-2 relative lg:pr-4 ">
 
             <WeatherSummaryWidget latLong={latLong} weatherV3={weatherV3} />
 
@@ -49,10 +50,14 @@ function Home({ latLong, weatherV3, locations, setLocations, locationData, setLo
               <Forecast hourlyforecast={weatherV3} />
             </div>
 
-            <WindSpeedWidget wind_speed={weatherV3.current.wind_speed} wind_deg={weatherV3.current.wind_deg} wind_gust={weatherV3.hourly[0].wind_gust} />
+            <div className='grid grid-cols-2 xl:grid-cols-3 gap-4 py-4'>
+              <div className='col-span-2'>
+                <WindSpeedWidget wind_speed={weatherV3.current.wind_speed} wind_deg={weatherV3.current.wind_deg} wind_gust={weatherV3.hourly[0].wind_gust} />
+              </div>
 
-            <div className='grid grid-cols-2 gap-4 py-4'>
-              <VisibilityWidget data={weatherV3.current.visibility} description={weatherV3.current.weather[0].description} />
+              <div className='col-span-1'>
+                <VisibilityWidget data={weatherV3.current.visibility} description={weatherV3.current.weather[0].description} />
+              </div>
               <HumidityWidget data={weatherV3.current.humidity} dewpoint={weatherV3.current.dew_point} />
               <SunRiseSetWidget sunrise={weatherV3.current.sunrise} sunset={weatherV3.current.sunset} />
               <PressureWidget pressure={weatherV3.current.pressure} />
@@ -60,7 +65,7 @@ function Home({ latLong, weatherV3, locations, setLocations, locationData, setLo
 
           </div>
 
-          <div className="col-span-1 w-full h-full rounded-lg ">
+          <div className="col-span-1 w-full lg:pt-0 md:pb-4 h-96 lg:h-full  rounded-lg ">
             <MapWidget />
           </div>
         </div>

@@ -21,8 +21,6 @@ const WeatherSummaryWidget = ({ latLong, weatherV3 }: IWeatherSummaryWidget) => 
           {getWeatherIcon(weatherV3.current.weather[0].icon, 'w-16 h-16')}
           <div>{weatherV3.current.temp.toString().split('.')[0]}</div>
           <div className='text-base pl-2 py-2'>°C </div>
-          <div className='text-base  p-2'>| </div>
-          <div className='text-base py-2'> °F </div>
         </div>
         <div className='flex'>
           Feels like {weatherV3.current.feels_like.toString().split('.')[0]}°C

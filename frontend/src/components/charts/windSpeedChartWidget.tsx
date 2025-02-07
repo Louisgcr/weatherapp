@@ -14,6 +14,7 @@ import { Line } from "react-chartjs-2";
 import "chartjs-adapter-date-fns";
 import annotationPlugin from "chartjs-plugin-annotation";
 import { IWeatherAPI3Response } from "interface";
+import { useBackground } from "context/BackgroundColorContext";
 
 ChartJS.register(
   CategoryScale,
@@ -33,7 +34,7 @@ interface IWindSpeedChartWidgetProps {
 
 const UVChartWidget = ({ hourlyforecast }: IWindSpeedChartWidgetProps) => {
   const chartRef = useRef(null);
-
+  const { backgroundColor } = useBackground();
   // Generate mock data (example)
   const generateData = (gust: boolean) => {
     const windList = hourlyforecast.hourly?.map((item) => {
@@ -125,7 +126,7 @@ const UVChartWidget = ({ hourlyforecast }: IWindSpeedChartWidgetProps) => {
   }), []);
 
   return (
-    <div className="w-full h-full ">
+    <div className={`w-full h-full ${backgroundColor}`}>
       <Line ref={chartRef} data={graphData} options={options} />
     </div>
   );

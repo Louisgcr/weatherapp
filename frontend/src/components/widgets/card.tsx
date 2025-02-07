@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 interface ICardProps {
   title: string;
   children: React.ReactNode;
-  icon?: string;
+  icon?: React.ReactNode;
   iconComponent?: React.ReactNode;
   link?: string
 }
@@ -20,9 +20,8 @@ const Card = ({ icon, iconComponent, title, children, link }: ICardProps) => {
 
   return (
     <div className={`rounded-lg ${backgroundColor}  ${link ? "cursor-pointer" : ""}`} onClick={handleClick}>
-      <div className="flex items-center mx-4 mt-4">
-        {icon &&
-          <img src={icon} alt={title} className="w-10 h-10" />}
+      <div className="flex items-center px-4 pt-2">
+        {icon}
         {iconComponent}
         <h2 className="text-slate-200">{title}</h2>
       </div>

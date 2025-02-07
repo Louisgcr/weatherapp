@@ -36,7 +36,7 @@ const SunRiseSetWidget = ({ sunrise, sunset }: ISunRiseSetWidgetProps) => {
     const startX = -80;
     const endX = 70;
     const peakX = 0;
-    const peakY = -80;
+    const peakY = -130;
     const control1X = -27;
     const control1Y = 0;
     const control2X = -35;
