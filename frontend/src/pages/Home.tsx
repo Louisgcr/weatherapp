@@ -13,22 +13,28 @@ import { IPageProps } from 'interface';
 import { useBackground } from 'context/BackgroundColorContext';
 import axios from 'axios';
 
-function Home({ latLong, weatherV3 }: IPageProps) {
+function Home({ latLong, weatherV3, locations, setLocations, locationData, setLocationData }: IPageProps) {
   const { backgroundColor } = useBackground();
 
   // Add a function to save location
   const saveLocation = async () => {
     // Save location to the database
-    await axios.post("http://localhost:5174/api/locations", {
+    const res = await axios.post("http://localhost:5174/api/locations", {
       latitude: latLong.lat,
       longitude: latLong.long,
       name: latLong.description
     });
-    console.log("Location saved", {
-      lat: latLong.lat,
-      long: latLong.long,
-      description: latLong.description
-    });
+
+    if (weatherV3 && locations && setLocations && locationData && setLocationData) {
+      const addLocation = {
+        id: res.data.id,
+        description: latLong.description,
+        lat: latLong.lat,
+        long: latLong.long
+      }
+      setLocations([...locations, addLocation]);
+      setLocationData([...locationData, weatherV3]);
+    }
   }
 
   return (
@@ -63,7 +69,7 @@ function Home({ latLong, weatherV3 }: IPageProps) {
 
       {/* Add a button to save location */}
       {latLong.description !== "Your Location" &&
-        <div className='group absolute bottom-0 right-0 m-6' onClick={() => saveLocation()}>
+        <div className='group fixed bottom-0 right-0 m-6 transition transform active:scale-95 duration-200' onClick={() => saveLocation()}>
           <button className=' bg-gray-800 hover:bg-gray-700 text-white font-bold p-2.5 rounded-full'>
             <SaveIcon className='fill-current w-8 h-8' />
           </button>

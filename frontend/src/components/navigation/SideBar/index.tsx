@@ -24,14 +24,13 @@ const SideBar: React.FC<ISidebarProps> = ({ setLatLong, locations, locationData 
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="flex flex-col ">
+      <div className="flex flex-col h-full overflow-y-auto">
         <SearchBar onSelect={setLatLong} />
         {locationData.map((loc, index) => (
-          <div className='relative flex p-2'>
+          <div className='relative flex p-4 c' onClick={() => setLatLong(locations[index])}>
             <SidebarWeatherWidget key={index} latLong={locations[index]} weatherV3={loc} />
           </div>
         ))}
-
       </div>
     </div>
   );

@@ -1,4 +1,5 @@
 export interface ILatLongDescription {
+  id?: number;
   description: string;
   lat: number;
   long: number;
@@ -13,6 +14,10 @@ export interface ISidebarProps {
 export interface IPageProps {
   latLong: ILatLongDescription;
   weatherV3: IWeatherAPI3Response | null;
+  locations?: ILatLongDescription[];
+  setLocations?: (data: ILatLongDescription[]) => void;
+  locationData?: IWeatherAPI3Response[];
+  setLocationData?: (data: IWeatherAPI3Response[]) => void
 }
 
 export interface IWeatherAPI3 {

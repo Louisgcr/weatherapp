@@ -31,8 +31,9 @@ function App() {
   const getAllLocationFrom = async () => {
     try {
       const response = await axios.get("http://localhost:5174/api/locations");
-      const formatedData = response.data.map((location: { name: string, latitude: number, longitude: number }) => {
+      const formatedData = response.data.map((location: { id: number, name: string, latitude: number, longitude: number }) => {
         return {
+          id: location.id,
           description: location.name,
           lat: location.latitude,
           long: location.longitude
@@ -181,7 +182,13 @@ function App() {
         <Routes>
           <Route path="/"
             element={
-              <Home latLong={latLong} weatherV3={weatherV3} />
+              <Home
+                latLong={latLong}
+                weatherV3={weatherV3}
+                locations={locations}
+                setLocations={setLocations}
+                locationData={locationData}
+                setLocationData={setLocationData} />
             }
           />
           <Route path="/wind-speed"
