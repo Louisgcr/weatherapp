@@ -1,7 +1,7 @@
 
 import Card
   from "./card";
-import { NavigationIcon } from "assets/icons/icons";
+import NavigationIcon from "assets/icons/navigationIcon.svg?react";
 
 interface IWindSpeedWidgetProps {
   wind_speed: number;

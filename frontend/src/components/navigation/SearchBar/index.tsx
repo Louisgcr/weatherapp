@@ -5,7 +5,8 @@ import usePlacesAutocomplete, {
 } from "use-places-autocomplete";
 
 import useKeyPress from 'hooks/useKeyPress';
-import { CloseIcon, SearchIcon } from 'assets/icons/icons';
+import CloseIcon from 'assets/icons/closeIcon.svg?react';
+import SearchIcon from 'assets/icons/searchIcon.svg?react';
 import { ILatLongDescription } from 'interface';
 
 interface ISearchBarProps {

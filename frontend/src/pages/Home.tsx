@@ -13,6 +13,8 @@ import { IPageProps } from 'interface';
 import { useBackground } from 'context/BackgroundColorContext';
 import axios from 'axios';
 
+
+
 function Home({ latLong, weatherV3, locations, setLocations, locationData, setLocationData }: IPageProps) {
   const { backgroundColor } = useBackground();
 
@@ -74,7 +76,7 @@ function Home({ latLong, weatherV3, locations, setLocations, locationData, setLo
 
       {/* Add a button to save location */}
       {latLong.description !== "Your Location" &&
-        <div className='group fixed bottom-0 right-0 m-6 transition transform active:scale-95 duration-200' onClick={() => saveLocation()}>
+        <div className='group fixed inset-[-8px]  md:inset-auto md:bottom-0 md:right-0  transition transform active:scale-95 duration-200' onClick={() => saveLocation()}>
           <button className=' bg-gray-800 hover:bg-gray-700 text-white font-bold p-2.5 rounded-full'>
             <SaveIcon className='fill-current w-8 h-8' />
           </button>
